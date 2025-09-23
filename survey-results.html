@@ -1,0 +1,101 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+        <h1 class="text-2xl font-bold text-center mb-6">Political Survey Results</h1>
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-blue-500 text-white">
+                    <th class="p-3 text-left">Name</th>
+                    <th class="p-3 text-left">Age</th>
+                    <th class="p-3 text-left">Political Party</th>
+                    <th class="p-3 text-left">Most Important Issue</th>
+                    <th class="p-3 text-left">Comments</th>
+                </tr>
+            </thead>
+            <tbody id="survey-table-body" class="text-gray-700">
+                <!-- Data will be inserted here via JavaScript -->
+            </tbody>
+        </table>
+        <div id="no-data-message" class="text-center text-gray-500 mt-4 hidden">
+            No survey responses available.
+        </div>
+        <a href="index.html" class="mt-6 inline-block w-full text-center bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200">Back to Survey</a>
+    </div>
+
+    <script>
+        // Sample function to load data from localStorage
+        function loadSurveyData() {
+            const surveyData = JSON.parse(localStorage.getItem('surveyResponses')) || [];
+            const tableBody = document.getElementById('survey-table-body');
+            const noDataMessage = document.getElementById('no-data-message');
+
+            if (surveyData.length === 0) {
+                noDataMessage.classList.remove('hidden');
+                return;
+            }
+
+            surveyData.forEach(data => {
+                const row = document.createElement('tr');
+                row.classList.add('border-b');
+                row.innerHTML = `
+                    <td class="p-3">${data.name}</td>
+                    <td class="p-3">${data.age}</td>
+                    <td class="p-3">${data.party}</td>
+                    <td class="p-3">${data.issues}</td>
+                    <td class="p-3">${data.comments || 'N/A'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Call the function to load data when the page loads
+        window.onload = loadSurveyData;
+    </script>
+</body>
+</html>
