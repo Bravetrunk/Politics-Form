@@ -185,3 +185,28 @@ function showSuccess(message, isError = false) {
         successDiv.classList.remove('show');
     }, 5000);
 }
+// Export data as CSV
+function exportToCSV() {
+    const submissionsRef = ref(database, 'submissions');
+    get(submissionsRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            const csv = convertToCSV(data);
+            downloadCSV(csv, 'submissions.csv');
+        }
+    });
+}
+
+// Search functionality
+function searchSubmissions(searchTerm) {
+    const submissionsRef = ref(database, 'submissions');
+    onValue(submissionsRef, (snapshot) => {
+        const data = snapshot.val();
+        const filtered = Object.entries(data)
+            .filter(([id, submission]) =>
+                submission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                submission.email.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        displaySubmissions(Object.fromEntries(filtered));
+    });
+}
