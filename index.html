@@ -8,6 +8,15 @@
 </head>
 <body>
     <div class="container">
+        <!-- Dashboard Link Button -->
+        <div class="dashboard-link-container">
+            <a href="dashboard.html" class="dashboard-link-btn">
+                <span class="icon">📊</span>
+                <span class="text">View Dashboard</span>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
         <form id="contactForm" class="form">
             <h2>Contact Us</h2>
 
@@ -41,6 +50,20 @@
 
         <!-- View Submissions Button -->
         <button id="viewSubmissions" class="view-btn">View All Submissions</button>
+
+        <!-- Admin Access Section -->
+        <div class="admin-section">
+            <div class="admin-card">
+                <h3>Admin Access</h3>
+                <p>Access the full dashboard to manage all submissions and view analytics</p>
+                <a href="dashboard.html" class="admin-dashboard-btn">
+                    <span>Open Admin Dashboard</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
 
         <!-- Submissions Display Area -->
         <div id="submissionsContainer" class="submissions-container"></div>
