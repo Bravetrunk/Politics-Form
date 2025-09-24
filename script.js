@@ -210,3 +210,35 @@ function searchSubmissions(searchTerm) {
         displaySubmissions(Object.fromEntries(filtered));
     });
 }
+// Add this to your existing script.js file
+
+// Function to update dashboard button with submission count
+function updateDashboardButton() {
+    const submissionsRef = ref(database, 'submissions');
+
+    onValue(submissionsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            const count = Object.keys(data).length;
+            const dashboardBtn = document.querySelector('.dashboard-link-btn');
+
+            if (dashboardBtn && count > 0) {
+                dashboardBtn.setAttribute('data-count', count);
+            }
+        }
+    });
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    updateDashboardButton();
+});
+
+// Optional: Add keyboard shortcut to open dashboard
+document.addEventListener('keydown', (e) => {
+    // Press Ctrl+D or Cmd+D to open dashboard
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+        e.preventDefault();
+        window.location.href = 'dashboard.html';
+    }
+});
