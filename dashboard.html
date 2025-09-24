@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submissions Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <!-- Chart.js for data visualization -->
+    <script src="<https://cdn.jsdelivr.net/npm/chart.js>"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📊 Dashboard</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#overview" class="nav-item active" data-section="overview">
+                    <span class="icon">📈</span> Overview
+                </a>
+                <a href="#submissions" class="nav-item" data-section="submissions">
+                    <span class="icon">📝</span> Submissions
+                </a>
+                <a href="#analytics" class="nav-item" data-section="analytics">
+                    <span class="icon">📊</span> Analytics
+                </a>
+                <a href="#export" class="nav-item" data-section="export">
+                    <span class="icon">💾</span> Export Data
+                </a>
+                <a href="index.html" class="nav-item">
+                    <span class="icon">🏠</span> Back to Form
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>Last updated: <span id="lastUpdated">Never</span></p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <h1>Form Submissions Dashboard</h1>
+                <button id="refreshBtn" class="refresh-btn">🔄 Refresh</button>
+            </header>
+
+            <!-- Overview Section -->
+            <section id="overview" class="dashboard-section active">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📧</div>
+                        <div class="stat-content">
+                            <h3>Total Submissions</h3>
+                            <p class="stat-number" id="totalSubmissions">0</p>
+                            <span class="stat-change" id="submissionChange">+0% from last week</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-content">
+                            <h3>Today's Submissions</h3>
+                            <p class="stat-number" id="todaySubmissions">0</p>
+                            <span class="stat-change">New today</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-content">
+                            <h3>This Week</h3>
+                            <p class="stat-number" id="weekSubmissions">0</p>
+                            <span class="stat-change">Last 7 days</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⏰</div>
+                        <div class="stat-content">
+                            <h3>Response Rate</h3>
+                            <p class="stat-number" id="responseRate">0%</p>
+                            <span class="stat-change">Average time: <span id="avgResponse">0h</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Submissions Over Time</h3>
+                        <canvas id="lineChart"></canvas>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>Submissions by Day</h3>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-card">
+                    <h3>Recent Activity</h3>
+                    <div id="recentActivity" class="activity-list">
+                        <!-- Activity items will be inserted here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Submissions Table Section -->
+            <section id="submissions" class="dashboard-section">
+                <div class="table-header">
+                    <h2>All Submissions</h2>
+                    <div class="table-controls">
+                        <input type="text" id="searchInput" placeholder="Search submissions..." class="search-input">
+                        <select id="filterSelect" class="filter-select">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                        <button id="deleteSelected" class="delete-selected-btn">Delete Selected</button>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="submissionsTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Table rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <button id="prevPage" class="page-btn">Previous</button>
+                    <span id="pageInfo">Page 1 of 1</span>
+                    <button id="nextPage" class="page-btn">Next</button>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="dashboard-section">
+                <h2>Analytics & Insights</h2>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Top Subjects</h3>
+                        <canvas id="pieChart"></canvas>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Hourly Distribution</h3>
+                        <canvas id="hourlyChart"></canvas>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Email Domains</h3>
+                        <div id="domainsList" class="domains-list"></div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Message Length Analysis</h3>
+                        <canvas id="messageLengthChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="insights-card">
+                    <h3>Key Insights</h3>
+                    <ul id="insightsList" class="insights-list">
+                        <!-- Insights will be inserted here -->
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Export Section -->
+            <section id="export" class="dashboard-section">
+                <h2>Export Data</h2>
+
+                <div class="export-options">
+                    <div class="export-card">
+                        <h3>📄 Export as CSV</h3>
+                        <p>Download all submissions in CSV format for Excel</p>
+                        <button id="exportCSV" class="export-btn">Download CSV</button>
+                    </div>
+
+                    <div class="export-card">
+                        <h3>📋 Export as JSON</h3>
+                        <p>Download all data in JSON format for developers</p>
+                        <button id="exportJSON" class="export-btn">Download JSON</button>
+                    </div>
+
+                    <div class="export-card">
+                        <h3>📊 Export Report</h3>
+                        <p>Generate a PDF report with analytics</p>
+                        <button id="exportPDF" class="export-btn">Generate Report</button>
+                    </div>
+
+                    <div class="export-card">
+                        <h3>🖨️ Print View</h3>
+                        <p>Open a printer-friendly version</p>
+                        <button id="printData" class="export-btn">Print Preview</button>
+                    </div>
+                </div>
+
+                <div class="backup-section">
+                    <h3>Backup Settings</h3>
+                    <div class="backup-controls">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="autoBackup">
+                            Enable automatic daily backups
+                        </label>
+                        <button id="backupNow" class="backup-btn">Backup Now</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for viewing full submission -->
+    <div id="submissionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Submission Details</h2>
+            <div id="modalBody" class="modal-body">
+                <!-- Details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html>
