@@ -1,0 +1,84 @@
+/* Add to your existing CSS */
+
+.view-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.view-btn:hover {
+    background: #5a6268;
+}
+
+.submissions-container {
+    display: none;
+    margin-top: 20px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.submissions-container h3 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.submissions-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.submission-card {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+.submission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.submission-card p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.submission-date {
+    font-size: 12px;
+    color: #999;
+    margin-top: 10px;
+}
+
+.delete-btn {
+    padding: 5px 10px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+.submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
